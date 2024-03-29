@@ -88,4 +88,10 @@ ENV CERT_DIR=/etc/cert
 # supervisord
 COPY resources/supervisord.conf /etc/
 
+# config openssl rh-allo-sha1-signatures for Orthros IdP
+RUN sed -i 's/\(^\[openssl_init\]$\)/\1\nalg_section = sig_algs/' /etc/pki/tls/openssl.cnf \
+    && echo "" >> /etc/pki/tls/openssl.cnf \
+    && echo "[sig_algs]" >> /etc/pki/tls/openssl.cnf \
+    && echo "rh-allow-sha1-signatures = yes" >> /etc/pki/tls/openssl.cnf
+
 CMD /start.sh
